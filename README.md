@@ -1,2 +1,4 @@
-# -rua
-Simple command line tool written in rust
+# rua
+
+Simple command line tool written in rust.
+
