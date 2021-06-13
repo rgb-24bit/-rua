@@ -1,6 +1,8 @@
+use crate::traits::SubCommandVariant;
+use anyhow::Result;
 use clap::{AppSettings, Clap};
-
 mod time;
+mod traits;
 
 /// Simple command line tool written in rust.
 #[derive(Clap)]
@@ -16,10 +18,12 @@ enum SubCommand {
     Time(time::Time),
 }
 
-fn main() {
+fn main() -> Result<()> {
     let opts: Opts = Opts::parse();
 
     match opts.subcmd {
-        SubCommand::Time(t) => t.execute(),
+        SubCommand::Time(t) => t.execute()?,
     }
+
+    Ok(())
 }

@@ -1,3 +1,5 @@
+use crate::traits::SubCommandVariant;
+use anyhow::Result;
 use chrono::prelude::*;
 use clap::Clap;
 use std::time::{Duration, UNIX_EPOCH};
@@ -12,14 +14,17 @@ pub struct Time {
     timestamps: Option<Vec<u64>>,
 }
 
-impl Time {
-    pub fn execute(&self) {
+impl SubCommandVariant for Time {
+    fn execute(&self) -> Result<()> {
         if let Some(ref ts) = self.timestamps {
-            self.do_time(ts)
+            Time::do_time(ts);
         }
+        Ok(())
     }
+}
 
-    fn do_time(&self, ts: &Vec<u64>) {
+impl Time {
+    fn do_time(ts: &Vec<u64>) {
         for t in ts.clone() {
             let d = UNIX_EPOCH + Duration::from_secs(t);
             let u = DateTime::<Utc>::from(d);
