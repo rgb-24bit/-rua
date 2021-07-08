@@ -4,7 +4,7 @@ use chrono::prelude::*;
 use clap::Clap;
 use std::time::{Duration, UNIX_EPOCH};
 
-const TIME_FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+const TIME_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 
 /// Time conversion.
 #[derive(Clap)]
@@ -24,9 +24,9 @@ impl SubCommandVariant for Time {
 }
 
 impl Time {
-    fn do_time(ts: &Vec<u64>) {
-        for t in ts.clone() {
-            let d = UNIX_EPOCH + Duration::from_secs(t);
+    fn do_time(ts: &[u64]) {
+        for t in ts {
+            let d = UNIX_EPOCH + Duration::from_secs(*t);
             let u = DateTime::<Utc>::from(d);
             let l = DateTime::<Local>::from(d);
 

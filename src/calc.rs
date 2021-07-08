@@ -1,6 +1,5 @@
 use anyhow::Result;
 use clap::Clap;
-use fasteval;
 
 use crate::traits::SubCommandVariant;
 
