@@ -3,6 +3,7 @@ use anyhow::Result;
 use clap::{AppSettings, Clap};
 mod time;
 mod traits;
+mod calc;
 
 /// Simple command line tool written in rust.
 #[derive(Clap)]
@@ -16,6 +17,7 @@ struct Opts {
 #[derive(Clap)]
 enum SubCommand {
     Time(time::Time),
+    Calc(calc::Calc),
 }
 
 fn main() -> Result<()> {
@@ -23,6 +25,7 @@ fn main() -> Result<()> {
 
     match opts.subcmd {
         SubCommand::Time(t) => t.execute()?,
+        SubCommand::Calc(c) => c.execute()?,
     }
 
     Ok(())
