@@ -1,4 +1,4 @@
 # rua
 
-Simple command line tool written in rust.
+My rust experiment/practice code. The rua is an executable command line program.
 
