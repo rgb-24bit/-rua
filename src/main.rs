@@ -1,9 +1,9 @@
 use crate::traits::SubCommandVariant;
 use anyhow::Result;
 use clap::{AppSettings, Clap};
+mod calc;
 mod time;
 mod traits;
-mod calc;
 
 /// Simple command line tool written in rust.
 #[derive(Clap)]
