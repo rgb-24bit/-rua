@@ -1,4 +1,4 @@
-# rua
+## rua
 
-My rust experiment/practice code. The rua is an executable command line program.
+My rust experiment/practice code. 
 
