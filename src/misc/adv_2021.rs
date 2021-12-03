@@ -1,4 +1,5 @@
 use std::{
+    cmp::Ordering,
     fs::File,
     io::{BufRead, BufReader, Error},
 };
@@ -74,6 +75,70 @@ fn day_02_2() -> Result<i32, Error> {
     Ok(hd.0 * hd.2)
 }
 
+fn day_03_1() -> Result<i32, Error> {
+    let e = BufReader::new(File::open("assets/adv_2021/input03.txt")?)
+        .lines()
+        .fold(vec![0; 12], |mut freq, bin| {
+            for (i, ch) in bin.unwrap().chars().enumerate() {
+                if ch == '1' {
+                    freq[i] += 1;
+                } else {
+                    freq[i] -= 1;
+                }
+            }
+            freq
+        })
+        .into_iter()
+        .fold(0, |e, v| (e << 1) + ((v >> 31) & 1));
+    Ok(e * (!e & 0xfff))
+}
+
+fn day_03_2() -> Result<i32, Error> {
+    let lines = BufReader::new(File::open("assets/adv_2021/input03.txt")?)
+        .lines()
+        .map(|l| l.unwrap().chars().collect::<Vec<char>>())
+        .collect::<Vec<Vec<char>>>();
+
+    let find = |mut bins: Vec<Vec<char>>, most: bool| {
+        for i in 0..12 {
+            let (l, r): (Vec<Vec<char>>, Vec<Vec<char>>) =
+                bins.into_iter().partition(|chars| chars[i] == '1');
+            bins = match l.len().cmp(&r.len()) {
+                Ordering::Equal => {
+                    if most {
+                        l
+                    } else {
+                        r
+                    }
+                }
+                Ordering::Less => {
+                    if most {
+                        r
+                    } else {
+                        l
+                    }
+                }
+                Ordering::Greater => {
+                    if most {
+                        l
+                    } else {
+                        r
+                    }
+                }
+            };
+            if bins.len() == 1 {
+                break;
+            }
+        }
+        i32::from_str_radix(&bins[0].iter().collect::<String>(), 2).unwrap()
+    };
+
+    let o = find(lines.clone(), true);
+    let c = find(lines, false);
+
+    Ok(o * c)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -96,5 +161,15 @@ mod tests {
     #[test]
     fn test_day_02_2() {
         assert_eq!(2073416724, day_02_2().unwrap());
+    }
+
+    #[test]
+    fn test_day_03_1() {
+        assert_eq!(1458194, day_03_1().unwrap())
+    }
+
+    #[test]
+    fn test_day_03_2() {
+        assert_eq!(2829354, day_03_2().unwrap())
     }
 }
