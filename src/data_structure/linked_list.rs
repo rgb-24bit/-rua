@@ -1,4 +1,4 @@
-use std::ptr::NonNull;
+use std::{mem, ptr::NonNull};
 
 struct Node<T> {
     prev: Option<NonNull<Node<T>>>,
@@ -79,6 +79,24 @@ impl<T> LinkedList<T> {
     }
 }
 
+impl<T> Drop for LinkedList<T> {
+    fn drop(&mut self) {
+        struct DropGuard<'a, T>(&'a mut LinkedList<T>);
+
+        impl<'a, T> Drop for DropGuard<'a, T> {
+            fn drop(&mut self) {
+                while self.0.pop().is_some() {}
+            }
+        }
+
+        while let Some(node) = self.pop() {
+            let guard = DropGuard(self);
+            drop(node);
+            mem::forget(guard);
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::LinkedList;
@@ -105,5 +123,20 @@ mod tests {
         assert_eq!("B", list.pop().unwrap());
         assert_eq!("A1", list.pop().unwrap());
         assert_eq!(None, list.pop());
+    }
+
+    #[test]
+    fn drop_linked_list() {
+        struct Container<T>(T);
+
+        impl<T> Drop for Container<T> {
+            fn drop(&mut self) {
+                println!("droped");
+            }
+        }
+
+        let mut list = LinkedList::<Container<String>>::new();
+
+        list.push(Container("A".to_string()));
     }
 }
