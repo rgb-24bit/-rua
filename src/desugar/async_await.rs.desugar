@@ -1,0 +1,83 @@
+#[prelude_import]
+use std::prelude::rust_2021::*;
+#[macro_use]
+extern crate std;
+async fn foo()
+ ->
+     /*impl Trait*/ #[lang = "from_generator"](move |mut _task_context|
+                                                   { { let _t = { 5 }; _t } })
+
+async fn bar()
+ ->
+     /*impl Trait*/ #[lang = "from_generator"](move |mut _task_context|
+                                                   {
+                                                       {
+                                                           let _t =
+                                                               {
+                                                                   let a =
+                                                                       match #[lang = "into_future"](foo())
+                                                                           {
+                                                                           mut pinned
+                                                                           =>
+                                                                           loop {
+                                                                               match unsafe
+                                                                                     {
+                                                                                         #[lang = "poll"](#[lang = "new_unchecked"](&mut pinned),
+                                                                                                          #[lang = "get_context"](_task_context))
+                                                                                     }
+                                                                                   {
+                                                                                   #[lang = "Ready"] {
+                                                                                   0: result
+                                                                                   }
+                                                                                   =>
+                                                                                   break
+                                                                                       result,
+                                                                                   #[lang = "Pending"] {
+
+                                                                                   }
+                                                                                   =>
+                                                                                   {
+                                                                                   }
+                                                                               }
+                                                                               _task_context
+                                                                                   =
+                                                                                   (yield
+                                                                                        ());
+                                                                           },
+                                                                       };
+                                                                   let b =
+                                                                       match #[lang = "into_future"](foo())
+                                                                           {
+                                                                           mut pinned
+                                                                           =>
+                                                                           loop {
+                                                                               match unsafe
+                                                                                     {
+                                                                                         #[lang = "poll"](#[lang = "new_unchecked"](&mut pinned),
+                                                                                                          #[lang = "get_context"](_task_context))
+                                                                                     }
+                                                                                   {
+                                                                                   #[lang = "Ready"] {
+                                                                                   0: result
+                                                                                   }
+                                                                                   =>
+                                                                                   break
+                                                                                       result,
+                                                                                   #[lang = "Pending"] {
+
+                                                                                   }
+                                                                                   =>
+                                                                                   {
+                                                                                   }
+                                                                               }
+                                                                               _task_context
+                                                                                   =
+                                                                                   (yield
+                                                                                        ());
+                                                                           },
+                                                                       };
+                                                                   a + b
+                                                               };
+                                                           _t
+                                                       }
+                                                   })
